@@ -183,9 +183,9 @@ IMPORTANT:
           content: prompt
         }
       ],
-      model: "llama-3.3-70b-versatile", // Best model for complex reasoning and detailed workout plans
+      model: "llama-3.1-8b-instant", // Fastest instant model for quick responses
       temperature: 0.7,
-      max_tokens: 2000, // Increased for better quality
+      max_tokens: 2000
     });
 
     const text = completion.choices[0]?.message?.content || '';
@@ -277,9 +277,9 @@ IMPORTANT:
           content: prompt
         }
       ],
-      model: "llama-3.3-70b-versatile", // Best model for complex reasoning and reliable JSON
+      model: "llama-3.1-8b-instant", // Fastest instant model for quick responses
       temperature: 0.7,
-      max_tokens: 1500, // Reduced to save tokens while maintaining quality
+      max_tokens: 1500
     });
 
     const text = completion.choices[0]?.message?.content || '';
@@ -387,9 +387,9 @@ IMPORTANT:
           content: prompt
         }
       ],
-      model: "llama-3.1-8b-instant", // Use smaller model for chatbot to save tokens
+      model: "llama-3.1-8b-instant", // Fastest instant model for quick responses
       temperature: 0.8,
-      max_tokens: 800, // Reduced to save tokens
+      max_tokens: 800
     });
 
     const text = completion.choices[0]?.message?.content || '';

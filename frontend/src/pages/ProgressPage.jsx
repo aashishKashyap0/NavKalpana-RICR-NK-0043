@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { progressService } from '../services/apiService';
+import { progressService, dailyLogService } from '../services/apiService';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -9,19 +9,22 @@ export const ProgressPage = () => {
   const { logout } = useAuth();
   const [progress, setProgress] = useState([]);
   const [habitScores, setHabitScores] = useState([]);
+  const [dailyLogs, setDailyLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('weight');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [progressRes, habitsRes] = await Promise.all([
+        const [progressRes, habitsRes, logsRes] = await Promise.all([
           progressService.getRecentProgress(12),
-          progressService.getHabitScores()
+          progressService.getHabitScores(),
+          dailyLogService.getRecentLogs(90)
         ]);
         
         setProgress(progressRes.data.reverse());
         setHabitScores(habitsRes.data.reverse());
+        setDailyLogs(logsRes.data.reverse());
       } catch (err) {
         console.error('Error fetching progress:', err);
       } finally {
@@ -40,6 +43,41 @@ export const ProgressPage = () => {
       </div>
     </div>
   );
+
+  // Prepare weight data from daily logs
+  const weightData = dailyLogs
+    .filter(log => log.weight_kg && log.weight_kg > 0)
+    .map((log, index) => ({
+      day: index + 1,
+      date: new Date(log.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      weight_kg: log.weight_kg
+    }));
+
+  // Prepare adherence data by week
+  const adherenceByWeek = {};
+  dailyLogs.forEach(log => {
+    const weekNum = Math.ceil((new Date(log.date) - new Date(new Date().getFullYear(), 0, 1)) / (7 * 24 * 60 * 60 * 1000));
+    if (!adherenceByWeek[weekNum]) {
+      adherenceByWeek[weekNum] = {
+        week_number: weekNum,
+        workout_days: 0,
+        diet_days: 0,
+        total_days: 0
+      };
+    }
+    adherenceByWeek[weekNum].total_days++;
+    if (log.workout_completed) adherenceByWeek[weekNum].workout_days++;
+    if (log.diet_followed) adherenceByWeek[weekNum].diet_days++;
+  });
+
+  const adherenceData = Object.values(adherenceByWeek)
+    .map(week => ({
+      week_number: week.week_number,
+      workout_adherence_percent: Math.round((week.workout_days / 7) * 100),
+      diet_adherence_percent: Math.round((week.diet_days / 7) * 100)
+    }))
+    .sort((a, b) => a.week_number - b.week_number)
+    .slice(-12); // Last 12 weeks
 
   return (
     <div className="page-container bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -116,14 +154,14 @@ export const ProgressPage = () => {
               <span className="text-4xl">📈</span>
               Weight Trend
             </h2>
-            {progress.length > 0 ? (
+            {weightData.length > 0 ? (
               <div className="bg-gradient-to-br from-slate-700/50 to-slate-600/50 border border-cyan-500/30 p-6 rounded-xl">
                 <ResponsiveContainer width="100%" height={400}>
-                  <LineChart data={progress}>
+                  <LineChart data={weightData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
                     <XAxis 
-                      dataKey="week_number" 
-                      label={{ value: 'Week', position: 'insideBottom', offset: -5 }}
+                      dataKey="date" 
+                      label={{ value: 'Date', position: 'insideBottom', offset: -5 }}
                       stroke="#94a3b8"
                     />
                     <YAxis 
@@ -155,8 +193,18 @@ export const ProgressPage = () => {
             ) : (
               <div className="text-center py-16 bg-gradient-to-br from-slate-700/50 to-slate-600/50 border border-slate-600/50 rounded-2xl">
                 <p className="text-7xl mb-4 animate-bounce-subtle">📊</p>
-                <p className="text-white text-2xl font-bold mb-2">No progress data yet</p>
-                <p className="text-gray-300 text-lg">Start logging your weekly progress to see your weight trend</p>
+                <p className="text-white text-2xl font-bold mb-2">No weight data yet</p>
+                <p className="text-gray-300 text-lg mb-6">Start logging your weight in the Daily Log to see your progress</p>
+                <button
+                  onClick={() => navigate('/daily-log')}
+                  className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-sky-500 text-white font-bold rounded-xl shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105 overflow-hidden"
+                >
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-sky-500 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                  <span className="relative flex items-center gap-2">
+                    <span>📝</span>
+                    <span>Go to Daily Log</span>
+                  </span>
+                </button>
               </div>
             )}
           </div>
@@ -169,10 +217,10 @@ export const ProgressPage = () => {
               <span className="text-4xl">✅</span>
               Weekly Adherence
             </h2>
-            {progress.length > 0 ? (
+            {adherenceData.length > 0 ? (
               <div className="bg-gradient-to-br from-slate-700/50 to-slate-600/50 border border-emerald-500/30 p-6 rounded-xl">
                 <ResponsiveContainer width="100%" height={400}>
-                  <BarChart data={progress}>
+                  <BarChart data={adherenceData}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
                     <XAxis 
                       dataKey="week_number" 
@@ -202,7 +250,17 @@ export const ProgressPage = () => {
               <div className="text-center py-16 bg-gradient-to-br from-slate-700/50 to-slate-600/50 border border-slate-600/50 rounded-2xl">
                 <p className="text-7xl mb-4 animate-bounce-subtle">✅</p>
                 <p className="text-white text-2xl font-bold mb-2">No adherence data yet</p>
-                <p className="text-gray-300 text-lg">Track your workout and diet adherence weekly to see your consistency</p>
+                <p className="text-gray-300 text-lg mb-6">Start logging your daily workouts and diet to see your consistency</p>
+                <button
+                  onClick={() => navigate('/daily-log')}
+                  className="group relative px-8 py-4 bg-gradient-to-r from-emerald-500 to-green-500 text-white font-bold rounded-xl shadow-lg hover:shadow-emerald-500/50 transition-all duration-300 transform hover:scale-105 overflow-hidden"
+                >
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-green-500 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                  <span className="relative flex items-center gap-2">
+                    <span>📝</span>
+                    <span>Go to Daily Log</span>
+                  </span>
+                </button>
               </div>
             )}
           </div>
@@ -256,7 +314,17 @@ export const ProgressPage = () => {
               <div className="text-center py-16 bg-gradient-to-br from-slate-700/50 to-slate-600/50 border border-slate-600/50 rounded-2xl">
                 <p className="text-7xl mb-4 animate-bounce-subtle">🎯</p>
                 <p className="text-white text-2xl font-bold mb-2">No habit scores yet</p>
-                <p className="text-gray-300 text-lg">Your habit scores are calculated based on your weekly adherence</p>
+                <p className="text-gray-300 text-lg mb-6">Your habit scores are calculated based on your daily logs</p>
+                <button
+                  onClick={() => navigate('/daily-log')}
+                  className="group relative px-8 py-4 bg-gradient-to-r from-sky-500 to-cyan-500 text-white font-bold rounded-xl shadow-lg hover:shadow-sky-500/50 transition-all duration-300 transform hover:scale-105 overflow-hidden"
+                >
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-cyan-500 to-sky-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                  <span className="relative flex items-center gap-2">
+                    <span>📝</span>
+                    <span>Go to Daily Log</span>
+                  </span>
+                </button>
               </div>
             )}
           </div>

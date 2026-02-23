@@ -13,6 +13,7 @@ export const DashboardPage = () => {
   const [progress, setProgress] = useState([]);
   const [dropoffRisk, setDropoffRisk] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showRiskDetails, setShowRiskDetails] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -159,25 +160,79 @@ export const DashboardPage = () => {
             </div>
           </div>
           
-          {/* Drop-off Risk Card */}
-          <div className={`stat-card ${dropoffRisk?.at_risk ? 'bg-gradient-to-br from-red-500 to-red-600' : 'bg-gradient-to-br from-green-500 to-green-600'} text-white animate-slide-up`} style={{animationDelay: '0.1s'}}>
+          {/* Drop-off Risk Card - Enhanced */}
+          <div 
+            onClick={() => setShowRiskDetails(true)}
+            className={`stat-card cursor-pointer ${
+            dropoffRisk?.risk_level === 'critical' ? 'bg-gradient-to-br from-red-600 to-red-700' :
+            dropoffRisk?.risk_level === 'high' ? 'bg-gradient-to-br from-orange-500 to-red-500' :
+            dropoffRisk?.risk_level === 'medium' ? 'bg-gradient-to-br from-amber-500 to-orange-500' :
+            'bg-gradient-to-br from-green-500 to-emerald-600'
+          } text-white animate-slide-up hover:scale-105 transition-transform`} style={{animationDelay: '0.1s'}}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold">Status</h3>
-              <span className="text-4xl">{dropoffRisk?.at_risk ? '⚠️' : '✅'}</span>
+              <span className="text-4xl">
+                {dropoffRisk?.risk_level === 'critical' ? '🚨' :
+                 dropoffRisk?.risk_level === 'high' ? '⚠️' :
+                 dropoffRisk?.risk_level === 'medium' ? '⚡' :
+                 '✅'}
+              </span>
             </div>
             <p className="text-3xl font-bold mb-2">
-              {dropoffRisk?.at_risk ? 'At Risk' : 'On Track'}
+              {dropoffRisk?.risk_level === 'critical' ? 'Critical' :
+               dropoffRisk?.risk_level === 'high' ? 'At Risk' :
+               dropoffRisk?.risk_level === 'medium' ? 'Needs Focus' :
+               'On Track'}
             </p>
-            <div className={dropoffRisk?.at_risk ? 'text-red-100' : 'text-green-100'}>
+            <div className={
+              dropoffRisk?.risk_level === 'critical' ? 'text-red-100' :
+              dropoffRisk?.risk_level === 'high' ? 'text-orange-100' :
+              dropoffRisk?.risk_level === 'medium' ? 'text-amber-100' :
+              'text-green-100'
+            }>
               {dropoffRisk?.at_risk ? 'Needs attention' : 'Keep it up!'}
             </div>
+            
+            {/* Risk Score Bar */}
+            {dropoffRisk?.risk_score > 0 && (
+              <div className="mt-4 pt-4 border-t border-opacity-30 border-white">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm opacity-90">Risk Score</span>
+                  <span className="text-lg font-bold">{dropoffRisk.risk_score}/100</span>
+                </div>
+                <div className="w-full bg-white bg-opacity-20 rounded-full h-2">
+                  <div 
+                    className="bg-white rounded-full h-2 transition-all duration-500"
+                    style={{width: `${dropoffRisk.risk_score}%`}}
+                  ></div>
+                </div>
+              </div>
+            )}
+            
+            {/* Reasons */}
             {dropoffRisk?.reasons?.length > 0 && (
               <div className="mt-4 pt-4 border-t border-opacity-30 border-white">
-                {dropoffRisk.reasons.map((reason, idx) => (
+                <p className="text-sm font-bold mb-2">Issues:</p>
+                {dropoffRisk.reasons.slice(0, 2).map((reason, idx) => (
                   <p key={idx} className="text-sm opacity-90 mb-1">• {reason}</p>
+                ))}
+                {dropoffRisk.reasons.length > 2 && (
+                  <p className="text-xs opacity-75 mt-1">+{dropoffRisk.reasons.length - 2} more</p>
+                )}
+              </div>
+            )}
+            
+            {/* Positive Notes */}
+            {dropoffRisk?.positive_notes?.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-opacity-30 border-white">
+                <p className="text-sm font-bold mb-2">Wins:</p>
+                {dropoffRisk.positive_notes.slice(0, 2).map((note, idx) => (
+                  <p key={idx} className="text-sm opacity-90 mb-1">✨ {note}</p>
                 ))}
               </div>
             )}
+            
+            <p className="text-xs opacity-75 mt-4 text-center">Click for details →</p>
           </div>
           
           {/* Upcoming Workout Card */}
@@ -243,10 +298,19 @@ export const DashboardPage = () => {
         )}
       
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+          <button
+            onClick={() => navigate('/daily-log')}
+            className="bg-gradient-to-br from-cyan-500 to-sky-600 hover:from-cyan-600 hover:to-sky-700 text-white p-8 rounded-2xl shadow-lg hover:shadow-xl text-center font-bold transition-all transform hover:scale-105 hover:-translate-y-1 animate-scale-in"
+          >
+            <div className="text-5xl mb-3 animate-bounce-subtle">📝</div>
+            <div className="text-xl">Daily Log</div>
+            <div className="text-sm opacity-80 mt-1">Track today</div>
+          </button>
           <button
             onClick={() => navigate('/workouts')}
             className="bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white p-8 rounded-2xl shadow-lg hover:shadow-xl text-center font-bold transition-all transform hover:scale-105 hover:-translate-y-1 animate-scale-in"
+            style={{animationDelay: '0.05s'}}
           >
             <div className="text-5xl mb-3 animate-bounce-subtle">💪</div>
             <div className="text-xl">Workouts</div>
@@ -264,16 +328,16 @@ export const DashboardPage = () => {
           <button
             onClick={() => navigate('/progress')}
             className="bg-gradient-to-br from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white p-8 rounded-2xl shadow-lg hover:shadow-xl text-center font-bold transition-all transform hover:scale-105 hover:-translate-y-1 animate-scale-in"
-            style={{animationDelay: '0.2s'}}
+            style={{animationDelay: '0.15s'}}
           >
             <div className="text-5xl mb-3 animate-bounce-subtle">📊</div>
-            <div className="text-xl">Log Progress</div>
+            <div className="text-xl">Progress</div>
             <div className="text-sm opacity-80 mt-1">Track metrics</div>
           </button>
           <button
             onClick={() => navigate('/assistant')}
             className="bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white p-8 rounded-2xl shadow-lg hover:shadow-xl text-center font-bold transition-all transform hover:scale-105 hover:-translate-y-1 animate-scale-in"
-            style={{animationDelay: '0.3s'}}
+            style={{animationDelay: '0.2s'}}
           >
             <div className="text-5xl mb-3 animate-bounce-subtle">🤖</div>
             <div className="text-xl">AI Coach</div>
@@ -281,6 +345,136 @@ export const DashboardPage = () => {
           </button>
         </div>
       </div>
+      
+      {/* Risk Details Modal */}
+      {showRiskDetails && dropoffRisk && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" onClick={() => setShowRiskDetails(false)}>
+          <div className="bg-slate-800 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            {/* Header */}
+            <div className={`p-8 ${
+              dropoffRisk.risk_level === 'critical' ? 'bg-gradient-to-r from-red-600 to-red-700' :
+              dropoffRisk.risk_level === 'high' ? 'bg-gradient-to-r from-orange-500 to-red-500' :
+              dropoffRisk.risk_level === 'medium' ? 'bg-gradient-to-r from-amber-500 to-orange-500' :
+              'bg-gradient-to-r from-green-500 to-emerald-600'
+            } text-white rounded-t-2xl`}>
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex items-center gap-4">
+                  <span className="text-6xl">
+                    {dropoffRisk.risk_level === 'critical' ? '🚨' :
+                     dropoffRisk.risk_level === 'high' ? '⚠️' :
+                     dropoffRisk.risk_level === 'medium' ? '⚡' :
+                     '✅'}
+                  </span>
+                  <div>
+                    <h2 className="text-4xl font-bold mb-2">
+                      {dropoffRisk.risk_level === 'critical' ? 'Critical Status' :
+                       dropoffRisk.risk_level === 'high' ? 'At Risk' :
+                       dropoffRisk.risk_level === 'medium' ? 'Needs Focus' :
+                       'On Track!'}
+                    </h2>
+                    <p className="text-lg opacity-90">Detailed Analysis & Recommendations</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowRiskDetails(false)}
+                  className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-all"
+                >
+                  <span className="text-2xl">✕</span>
+                </button>
+              </div>
+              
+              {/* Risk Score */}
+              <div className="bg-white bg-opacity-20 rounded-xl p-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-lg font-semibold">Risk Score</span>
+                  <span className="text-3xl font-bold">{dropoffRisk.risk_score}/100</span>
+                </div>
+                <div className="w-full bg-white bg-opacity-30 rounded-full h-3">
+                  <div 
+                    className="bg-white rounded-full h-3 transition-all duration-500"
+                    style={{width: `${dropoffRisk.risk_score}%`}}
+                  ></div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Content */}
+            <div className="p-8 space-y-6">
+              {/* Positive Notes */}
+              {dropoffRisk.positive_notes?.length > 0 && (
+                <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 border-2 border-green-500/50 rounded-xl p-6">
+                  <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span className="text-3xl">🌟</span>
+                    What's Going Well
+                  </h3>
+                  <div className="space-y-2">
+                    {dropoffRisk.positive_notes.map((note, idx) => (
+                      <div key={idx} className="flex items-start gap-3 text-gray-200">
+                        <span className="text-green-400 text-xl mt-1">✓</span>
+                        <p className="text-lg">{note}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Issues */}
+              {dropoffRisk.reasons?.length > 0 && (
+                <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 border-2 border-red-500/50 rounded-xl p-6">
+                  <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span className="text-3xl">⚠️</span>
+                    Areas Needing Attention
+                  </h3>
+                  <div className="space-y-2">
+                    {dropoffRisk.reasons.map((reason, idx) => (
+                      <div key={idx} className="flex items-start gap-3 text-gray-200">
+                        <span className="text-red-400 text-xl mt-1">•</span>
+                        <p className="text-lg">{reason}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Recommendations */}
+              {dropoffRisk.recommendations?.length > 0 && (
+                <div className="bg-gradient-to-br from-cyan-500/20 to-sky-500/20 border-2 border-cyan-500/50 rounded-xl p-6">
+                  <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span className="text-3xl">💡</span>
+                    Action Plan
+                  </h3>
+                  <div className="space-y-3">
+                    {dropoffRisk.recommendations.map((rec, idx) => (
+                      <div key={idx} className="flex items-start gap-3 bg-slate-700/50 rounded-lg p-4 hover:bg-slate-700 transition-all">
+                        <span className="text-cyan-400 text-2xl font-bold">{idx + 1}</span>
+                        <p className="text-lg text-gray-200">{rec}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Quick Actions */}
+              <div className="grid grid-cols-2 gap-4 pt-4">
+                <button
+                  onClick={() => { setShowRiskDetails(false); navigate('/daily-log'); }}
+                  className="bg-gradient-to-r from-cyan-500 to-sky-500 text-white font-bold py-4 rounded-xl hover:shadow-lg hover:shadow-cyan-500/50 transition-all transform hover:scale-105"
+                >
+                  <span className="text-2xl mr-2">📝</span>
+                  Log Today
+                </button>
+                <button
+                  onClick={() => { setShowRiskDetails(false); navigate('/assistant'); }}
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-4 rounded-xl hover:shadow-lg hover:shadow-purple-500/50 transition-all transform hover:scale-105"
+                >
+                  <span className="text-2xl mr-2">🤖</span>
+                  Talk to AI Coach
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

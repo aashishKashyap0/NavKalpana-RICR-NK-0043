@@ -71,7 +71,7 @@ const testModelUpgrade = async () => {
     const newStart = Date.now();
     const newCompletion = await groq.chat.completions.create({
       ...testPrompt,
-      model: "llama-3.3-70b-versatile"
+      model: "llama-3.1-8b-instant"
     });
     const newTime = Date.now() - newStart;
     

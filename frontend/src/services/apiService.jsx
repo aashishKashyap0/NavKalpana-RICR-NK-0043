@@ -98,4 +98,22 @@ export const assistantService = {
     api.post('/assistant/ask', { question })
 };
 
+// Daily Log endpoints
+export const dailyLogService = {
+  logDaily: (logData) =>
+    api.post('/daily/log', logData),
+  getDailyLog: (date) =>
+    api.get(`/daily/date/${date}`),
+  getRecentLogs: (days = 30) =>
+    api.get(`/daily/recent?days=${days}`),
+  getLogsInRange: (startDate, endDate) =>
+    api.get(`/daily/range?startDate=${startDate}&endDate=${endDate}`),
+  getStreak: () =>
+    api.get('/daily/streak'),
+  getDailyStats: () =>
+    api.get('/daily/stats'),
+  getWeeklyAdherence: (weekNumber) =>
+    api.get(`/daily/adherence/${weekNumber}`)
+};
+
 export default api;

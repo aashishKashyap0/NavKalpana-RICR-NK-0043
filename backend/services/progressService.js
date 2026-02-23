@@ -112,17 +112,44 @@ export const getRecentEnergyLogs = async (user_id, days = 7) => {
   }).sort({ created_at: -1 });
 };
 
-// Detect drop-off risk
+// Detect drop-off risk - Enhanced with Daily Logs
 export const checkDropoffRisk = async (user_id) => {
-  const recentProgress = await getRecentProgress(user_id, 2);
-  const recentEnergy = await getRecentEnergyLogs(user_id, 14);
+  // Import daily log service
+  const DailyLog = (await import('../models/DailyLog.js')).default;
   
-  const workoutCompletions = recentProgress.flatMap(p => p.daily_logs?.map(log => log.workout_completion) || []);
-  const dietAdherences = recentProgress.flatMap(p => p.daily_logs?.map(log => log.diet_adherence) || []);
+  // Get recent daily logs (last 14 days)
+  const recentLogs = await DailyLog.find({ user_id })
+    .sort({ date: -1 })
+    .limit(14);
   
-  const lastLogDate = recentProgress[0]?.created_at;
+  // Get current habit score
+  const habitScore = await getCurrentHabitScore(user_id);
   
-  return detectDropoffRisk(workoutCompletions, dietAdherences.map(d => calculateAdherence([d])), lastLogDate);
+  // Calculate current streak
+  let streak = 0;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  for (let i = 0; i < recentLogs.length; i++) {
+    const logDate = new Date(recentLogs[i].date);
+    logDate.setHours(0, 0, 0, 0);
+    
+    const expectedDate = new Date(today);
+    expectedDate.setDate(expectedDate.getDate() - i);
+    expectedDate.setHours(0, 0, 0, 0);
+    
+    if (logDate.getTime() !== expectedDate.getTime()) {
+      break;
+    }
+    
+    if (recentLogs[i].workout_completed && recentLogs[i].diet_followed) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+  
+  return detectDropoffRisk(recentLogs, habitScore?.habit_score, streak);
 };
 
 // Forecast goal achievement

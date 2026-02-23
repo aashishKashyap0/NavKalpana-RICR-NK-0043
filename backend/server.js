@@ -14,6 +14,7 @@ import dietRoutes from './routes/dietRoutes.js';
 import progressRoutes from './routes/progressRoutes.js';
 import assistantRoutes from './routes/assistantRoutes.js';
 import exerciseLogRoutes from './routes/exerciseLogRoutes.js';
+import dailyLogRoutes from './routes/dailyLogRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -40,6 +41,7 @@ app.use('/api/diet', dietRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/assistant', assistantRoutes);
 app.use('/api/exercises', exerciseLogRoutes);
+app.use('/api/daily', dailyLogRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

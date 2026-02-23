@@ -13,6 +13,7 @@ import WorkoutPage from './pages/WorkoutPage';
 import DietPage from './pages/DietPage';
 import ProgressPage from './pages/ProgressPage';
 import AssistantPage from './pages/AssistantPage';
+import DailyLogPage from './pages/DailyLogPage';
 
 const ProtectedRoute = ({ element }) => {
   const { token } = useAuth();
@@ -87,6 +88,7 @@ function App() {
           <Route path="/workouts" element={<ProtectedRoute element={<WorkoutPage />} />} />
           <Route path="/diet" element={<ProtectedRoute element={<DietPage />} />} />
           <Route path="/progress" element={<ProtectedRoute element={<ProgressPage />} />} />
+          <Route path="/daily-log" element={<ProtectedRoute element={<DailyLogPage />} />} />
           <Route path="/assistant" element={<ProtectedRoute element={<AssistantPage />} />} />
         </Routes>
       </AuthProvider>
