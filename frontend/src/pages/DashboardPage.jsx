@@ -3,6 +3,7 @@ import { workoutService, progressService, profileService, dailyLogService, measu
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import fitai from "../assets/fitai.png";
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
@@ -233,13 +234,13 @@ export const DashboardPage = () => {
       {/* Sidebar */}
       <div className="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white p-6 shadow-2xl z-50">
         {/* Logo */}
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold mb-2">
-            <span className="text-white">Fit</span>
-            <span className="text-teal-400">🤖</span>
-            <span className="text-white">Ai</span>
-          </h1>
-        </div>
+        <div className="mb-12 flex justify-center">
+      <img
+        src={fitai}
+        alt="FitAI Logo"
+        className="w-36 h-auto object-contain"
+      />
+    </div>
 
         {/* Navigation */}
         <nav className="space-y-2">
