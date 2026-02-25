@@ -63,11 +63,7 @@ const profileSchema = new mongoose.Schema({
     max: 7,
     default: 4
   },
-<<<<<<< HEAD
-  // Body Measurements 
-=======
   // Body Measurements (MANDATORY - required for measurement trends tracking)
->>>>>>> 5d3a0de (new feature added)
   initial_measurements: {
     waist_cm: { 
       type: Number, 

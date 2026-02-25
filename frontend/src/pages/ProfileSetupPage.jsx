@@ -482,7 +482,6 @@ export const ProfileSetupPage = () => {
                     </>
                 </div>
               </div>
-            </div>
             
             <button
               type="submit"
