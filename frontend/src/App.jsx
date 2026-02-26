@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import ChatbotWidget from './components/ChatbotWidget';
@@ -25,6 +25,13 @@ import ReportsPage from './pages/ReportsPage';
 const ProtectedRoute = ({ element }) => {
   const { token } = useAuth();
   return token ? element : <Navigate to="/login" />;
+};
+
+// Component to conditionally render Footer
+const ConditionalFooter = () => {
+  const location = useLocation();
+  // Only show footer on landing page
+  return location.pathname === '/' ? <Footer /> : null;
 };
 
 function App() {
@@ -104,7 +111,7 @@ function App() {
           <Route path="/premium" element={<ProtectedRoute element={<PremiumPage />} />} />
           <Route path="/reports" element={<ProtectedRoute element={<ReportsPage />} />} />
         </Routes>
-        <Footer />
+        <ConditionalFooter />
       </AuthProvider>
     </Router>
   );

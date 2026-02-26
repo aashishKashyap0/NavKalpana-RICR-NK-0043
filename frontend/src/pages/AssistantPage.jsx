@@ -199,42 +199,42 @@ export const AssistantPage = () => {
   return (
     <div className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 min-h-screen flex flex-col">
       
-      <div className="bg-gradient-to-r from-violet-500 to-purple-600 text-white p-6 shadow-2xl animate-slide-down">
-        <div className="max-w-4xl mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-4xl font-bold mb-2 flex items-center gap-3">
-              <span className="text-5xl animate-bounce-subtle">🤖</span>
+      <div className="bg-gradient-to-r from-violet-500 to-purple-600 text-white p-4 sm:p-6 shadow-2xl animate-slide-down">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="w-full sm:w-auto">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 flex items-center gap-2 sm:gap-3">
+              <span className="text-3xl sm:text-4xl md:text-5xl animate-bounce-subtle">🤖</span>
               <span>AI Fitness Coach</span>
             </h1>
-            <p className="text-cyan-100 text-lg">Get personalized advice based on your real data</p>
+            <p className="text-cyan-100 text-sm sm:text-base md:text-lg">Get personalized advice based on your real data</p>
             {userStats && (
-              <div className="mt-3 text-sm text-purple-100 flex gap-4 flex-wrap">
-                <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full">📊 {userStats.weeksTracked} weeks tracked</span>
-                <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full">💪 {userStats.avgWorkout}% workout</span>
-                <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full">🥗 {userStats.avgDiet}% diet</span>
-                <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full">🔥 {userStats.currentStreak} week streak</span>
+              <div className="mt-3 text-xs sm:text-sm text-purple-100 flex gap-2 sm:gap-4 flex-wrap">
+                <span className="bg-white bg-opacity-20 px-2 sm:px-3 py-1 rounded-full">📊 {userStats.weeksTracked} weeks tracked</span>
+                <span className="bg-white bg-opacity-20 px-2 sm:px-3 py-1 rounded-full">💪 {userStats.avgWorkout}% workout</span>
+                <span className="bg-white bg-opacity-20 px-2 sm:px-3 py-1 rounded-full">🥗 {userStats.avgDiet}% diet</span>
+                <span className="bg-white bg-opacity-20 px-2 sm:px-3 py-1 rounded-full">🔥 {userStats.currentStreak} week streak</span>
               </div>
             )}
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
             <button
               onClick={clearChatHistory}
-              className="group relative px-6 py-3 bg-white bg-opacity-20 hover:bg-opacity-30 text-white font-bold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 overflow-hidden"
+              className="flex-1 sm:flex-none group relative px-3 sm:px-6 py-2 sm:py-3 bg-white bg-opacity-20 hover:bg-opacity-30 text-white text-sm sm:text-base font-bold rounded-xl shadow-lg transition-all duration-300 transform hover:scale-105 overflow-hidden"
               title="Clear chat history"
             >
-              <span className="relative flex items-center gap-2">
-                <span className="text-xl">🗑️</span>
-                <span>Clear Chat</span>
+              <span className="relative flex items-center justify-center gap-2">
+                <span className="text-lg sm:text-xl">🗑️</span>
+                <span className="hidden sm:inline">Clear Chat</span>
               </span>
             </button>
             <button
               onClick={() => navigate('/dashboard')}
-              className="group relative px-6 py-3 bg-white text-violet-600 font-bold rounded-xl shadow-lg hover:shadow-white/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 overflow-hidden"
+              className="flex-1 sm:flex-none group relative px-3 sm:px-6 py-2 sm:py-3 bg-white text-violet-600 text-sm sm:text-base font-bold rounded-xl shadow-lg hover:shadow-white/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 overflow-hidden"
             >
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-violet-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              <span className="relative flex items-center gap-2">
-                <span className="text-xl">🏠</span>
-                <span>Dashboard</span>
+              <span className="relative flex items-center justify-center gap-2">
+                <span className="text-lg sm:text-xl">🏠</span>
+                <span className="hidden sm:inline">Dashboard</span>
               </span>
             </button>
             <button
@@ -242,11 +242,11 @@ export const AssistantPage = () => {
                 logout();
                 navigate('/login');
               }}
-              className="group relative px-6 py-3 bg-gradient-to-r from-red-500 to-rose-500 text-white font-bold rounded-xl shadow-lg hover:shadow-red-500/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 overflow-hidden"
+              className="hidden sm:flex group relative px-3 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-red-500 to-rose-500 text-white text-sm sm:text-base font-bold rounded-xl shadow-lg hover:shadow-red-500/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 overflow-hidden"
             >
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-rose-500 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               <span className="relative flex items-center gap-2">
-                <span className="text-xl">🚪</span>
+                <span className="text-lg sm:text-xl">🚪</span>
                 <span>Logout</span>
               </span>
             </button>
@@ -255,28 +255,28 @@ export const AssistantPage = () => {
       </div>
 
       
-      <div className="flex-1 max-w-4xl w-full mx-auto p-4 overflow-hidden flex flex-col">
+      <div className="flex-1 max-w-4xl w-full mx-auto p-2 sm:p-4 overflow-hidden flex flex-col">
         
-        <div className="flex-1 overflow-y-auto mb-4 space-y-4 pb-4">
+        <div className="flex-1 overflow-y-auto mb-3 sm:mb-4 space-y-3 sm:space-y-4 pb-4">
           {chatHistory.map((chat, idx) => (
             <div key={idx} className={`flex ${chat.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[80%] ${chat.type === 'user' ? 'bg-gradient-to-br from-violet-500 to-purple-600 text-white' : 'bg-white border border-gray-200 text-gray-900'} rounded-lg p-4 shadow-lg`}>
+              <div className={`max-w-[85%] sm:max-w-[80%] ${chat.type === 'user' ? 'bg-gradient-to-br from-violet-500 to-purple-600 text-white' : 'bg-white border border-gray-200 text-gray-900'} rounded-lg p-3 sm:p-4 shadow-lg`}>
                 {chat.type === 'bot' && (
                   <div className="flex items-center mb-2">
-                    <span className="text-2xl mr-2">🤖</span>
-                    <span className="font-bold text-sm text-violet-600">AI Coach</span>
+                    <span className="text-xl sm:text-2xl mr-2">🤖</span>
+                    <span className="font-bold text-xs sm:text-sm text-violet-600">AI Coach</span>
                   </div>
                 )}
                 
                 <div 
-                  className="prose prose-sm max-w-none"
+                  className="prose prose-sm max-w-none text-sm sm:text-base"
                   dangerouslySetInnerHTML={{ __html: formatAIResponse(chat.message) }}
                 />
                 
                 {chat.steps && (
                   <div className="mt-3 pt-3 border-t border-gray-200">
-                    <p className="font-bold text-sm mb-2 text-violet-600">📋 Action Steps:</p>
-                    <ul className="list-disc list-inside space-y-1 text-sm">
+                    <p className="font-bold text-xs sm:text-sm mb-2 text-violet-600">📋 Action Steps:</p>
+                    <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm">
                       {chat.steps.map((step, i) => (
                         <li key={i}>{step}</li>
                       ))}
@@ -285,13 +285,13 @@ export const AssistantPage = () => {
                 )}
                 
                 {chat.tip && (
-                  <div className="mt-3 bg-violet-50 border border-violet-200 p-2 rounded text-sm">
+                  <div className="mt-3 bg-violet-50 border border-violet-200 p-2 rounded text-xs sm:text-sm">
                     <span className="font-bold text-violet-600">💡 Tip:</span> {chat.tip}
                   </div>
                 )}
                 
                 {chat.data_insights && (
-                  <div className="mt-3 bg-blue-50 border border-blue-200 p-2 rounded text-sm">
+                  <div className="mt-3 bg-blue-50 border border-blue-200 p-2 rounded text-xs sm:text-sm">
                     <span className="font-bold text-blue-600">📊 Data Insights:</span> {chat.data_insights}
                   </div>
                 )}
@@ -311,7 +311,7 @@ export const AssistantPage = () => {
           
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-lg">
+              <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-4 shadow-lg">
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-violet-500 rounded-full animate-bounce"></div>
                   <div className="w-2 h-2 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
@@ -326,14 +326,14 @@ export const AssistantPage = () => {
 
         
         {chatHistory.length === 1 && (
-          <div className="mb-4">
-            <p className="text-sm text-gray-600 mb-2 font-semibold">💬 Try asking:</p>
+          <div className="mb-3 sm:mb-4">
+            <p className="text-xs sm:text-sm text-gray-600 mb-2 font-semibold">💬 Try asking:</p>
             <div className="flex flex-wrap gap-2">
               {suggestedQuestions.map((q, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSuggestedQuestion(q)}
-                  className="text-sm px-3 py-2 bg-white hover:bg-gray-50 border border-gray-200 hover:border-violet-300 rounded-full text-gray-700 hover:text-violet-600 transition"
+                  className="text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 bg-white hover:bg-gray-50 border border-gray-200 hover:border-violet-300 rounded-full text-gray-700 hover:text-violet-600 transition"
                 >
                   {q}
                 </button>
@@ -343,20 +343,20 @@ export const AssistantPage = () => {
         )}
 
         
-        <form onSubmit={handleAsk} className="bg-white border border-gray-200 rounded-lg shadow-lg p-4">
+        <form onSubmit={handleAsk} className="bg-white border border-gray-200 rounded-lg shadow-lg p-3 sm:p-4">
           <div className="flex gap-2">
             <input
               type="text"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ask me anything about your fitness journey..."
-              className="flex-1 px-4 py-3 bg-gray-50 border-2 border-gray-200 text-gray-900 placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+              placeholder="Ask me anything..."
+              className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-gray-50 border-2 border-gray-200 text-gray-900 text-sm sm:text-base placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
               disabled={loading}
             />
             <button
               type="submit"
               disabled={loading || !question.trim()}
-              className="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white font-bold px-6 py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105"
+              className="bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white font-bold px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105"
             >
               {loading ? '...' : 'Send'}
             </button>

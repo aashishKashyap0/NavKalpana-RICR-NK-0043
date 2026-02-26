@@ -106,10 +106,14 @@ export const DailyLogPage = () => {
       <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
       
       <div className="max-w-6xl mx-auto relative z-10">
-        <div className="flex justify-between items-center mb-8 animate-slide-down">
-          <div>
-            <h1 className="text-5xl font-bold gradient-text mb-2">📝 Daily Log</h1>
-            <p className="text-gray-600">Track your daily progress and maintain your streak</p>
+        {/* Logo Header */}
+        <div className="flex items-center justify-between mb-8 animate-slide-down">
+          <div className="flex items-center gap-3">
+            <div className="text-4xl animate-bounce-subtle">🤖</div>
+            <h1 className="text-4xl font-bold">
+              <span className="text-gray-900">Fit</span>
+              <span className="text-teal-400">AI</span>
+            </h1>
           </div>
           <div className="flex gap-3">
             <button
@@ -122,11 +126,13 @@ export const DailyLogPage = () => {
               </span>
             </button>
             <button
-              onClick={() => { logout(); navigate('/login'); }}
-              className="group relative px-6 py-3 bg-gradient-to-r from-red-500 to-rose-500 text-white font-bold rounded-xl shadow-lg hover:shadow-red-500/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 overflow-hidden"
+              onClick={() => {
+                logout();
+                navigate('/login');
+              }}
+              className="group relative px-6 py-3 bg-gradient-to-r from-red-500 to-rose-500 text-white font-bold rounded-xl shadow-lg hover:shadow-red-500/50 transition-all duration-300 transform hover:scale-105"
             >
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-rose-500 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              <span className="relative flex items-center gap-2">
+              <span className="flex items-center gap-2">
                 <span className="text-xl">🚪</span>
                 <span>Logout</span>
               </span>
@@ -134,6 +140,11 @@ export const DailyLogPage = () => {
           </div>
         </div>
 
+        {/* Page Title */}
+        <div className="mb-8 animate-slide-down">
+          <h2 className="text-5xl font-bold gradient-text mb-2">📝 Daily Log</h2>
+          <p className="text-gray-600">Track your daily progress and maintain your streak</p>
+        </div>
         
         {recoveryStatus && recoveryStatus.recommendation && (
           <div className={`mb-8 rounded-3xl p-6 shadow-xl animate-slide-down ${

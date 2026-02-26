@@ -26,6 +26,7 @@ export const DashboardPage = () => {
   const [goalForecast, setGoalForecast] = useState(null);
   const [measurementTrends, setMeasurementTrends] = useState(null);
   const [showMeasurementModal, setShowMeasurementModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const returningStatus = localStorage.getItem('isReturningUser');
@@ -312,8 +313,26 @@ export const DashboardPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        className="lg:hidden fixed top-4 left-4 z-50 p-3 bg-gray-900 text-white rounded-xl shadow-lg"
+      >
+        <span className="text-xl">{sidebarOpen ? '✕' : '☰'}</span>
+      </button>
+
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
       
-      <div className="fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white p-6 shadow-2xl z-50">
+      {/* Sidebar */}
+      <div className={`fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-gray-900 to-gray-800 text-white p-6 shadow-2xl z-50 transition-transform duration-300 ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      }`}>
         
         <div className="mb-12">
           <h1 className="text-4xl font-bold mb-2">
@@ -326,7 +345,10 @@ export const DashboardPage = () => {
         
         <nav className="space-y-2">
           <button
-            onClick={() => setActiveView('dashboard')}
+            onClick={() => {
+              setActiveView('dashboard');
+              setSidebarOpen(false);
+            }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
               activeView === 'dashboard'
                 ? 'bg-teal-500 text-white shadow-lg'
@@ -338,7 +360,10 @@ export const DashboardPage = () => {
           </button>
           
           <button
-            onClick={() => navigate('/daily-log')}
+            onClick={() => {
+              navigate('/daily-log');
+              setSidebarOpen(false);
+            }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-700 transition-all"
           >
             <span className="text-xl">📝</span>
@@ -346,7 +371,10 @@ export const DashboardPage = () => {
           </button>
           
           <button
-            onClick={() => navigate('/workouts')}
+            onClick={() => {
+              navigate('/workouts');
+              setSidebarOpen(false);
+            }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-700 transition-all"
           >
             <span className="text-xl">💪</span>
@@ -354,7 +382,10 @@ export const DashboardPage = () => {
           </button>
           
           <button
-            onClick={() => navigate('/diet')}
+            onClick={() => {
+              navigate('/diet');
+              setSidebarOpen(false);
+            }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-700 transition-all"
           >
             <span className="text-xl">🥗</span>
@@ -362,7 +393,10 @@ export const DashboardPage = () => {
           </button>
           
           <button
-            onClick={() => navigate('/progress')}
+            onClick={() => {
+              navigate('/progress');
+              setSidebarOpen(false);
+            }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-700 transition-all"
           >
             <span className="text-xl">📊</span>
@@ -370,7 +404,10 @@ export const DashboardPage = () => {
           </button>
           
           <button
-            onClick={() => navigate('/assistant')}
+            onClick={() => {
+              navigate('/assistant');
+              setSidebarOpen(false);
+            }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-700 transition-all"
           >
             <span className="text-xl">🤖</span>
@@ -378,7 +415,10 @@ export const DashboardPage = () => {
           </button>
           
           <button
-            onClick={() => navigate('/premium')}
+            onClick={() => {
+              navigate('/premium');
+              setSidebarOpen(false);
+            }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:shadow-lg transition-all"
           >
             <span className="text-xl">💎</span>
@@ -386,7 +426,10 @@ export const DashboardPage = () => {
           </button>
           
           <button
-            onClick={() => navigate('/reports')}
+            onClick={() => {
+              navigate('/reports');
+              setSidebarOpen(false);
+            }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-700 transition-all"
           >
             <span className="text-xl">📊</span>
@@ -397,7 +440,10 @@ export const DashboardPage = () => {
         
         <div className="absolute bottom-6 left-6 right-6 space-y-2">
           <button
-            onClick={() => navigate('/profile')}
+            onClick={() => {
+              navigate('/profile');
+              setSidebarOpen(false);
+            }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:bg-gray-700 transition-all"
           >
             <span className="text-xl">⚙️</span>
@@ -414,26 +460,23 @@ export const DashboardPage = () => {
       </div>
 
       
-      <div className="ml-64 p-8">
+      <div className="lg:ml-64 p-4 sm:p-6 md:p-8">
         
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
+          <div className="ml-12 lg:ml-0">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
               {isReturningUser ? 'Welcome Back!' : 'Welcome!'}
             </h1>
-            <p className="text-gray-600">
+            <p className="text-sm sm:text-base text-gray-600">
               {user?.name || profile?.name || 'User'} • {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
             </p>
           </div>
-          <div className="flex gap-3">
-            <button className="p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all">
-              <span className="text-xl">🔍</span>
+          <div className="flex gap-2 sm:gap-3 ml-12 lg:ml-0">
+            <button className="p-2 sm:p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all">
+              <span className="text-lg sm:text-xl">🔔</span>
             </button>
-            <button className="p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all">
-              <span className="text-xl">🔔</span>
-            </button>
-            <button className="p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all">
-              <span className="text-xl">☰</span>
+            <button className="p-2 sm:p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all lg:hidden" onClick={() => setSidebarOpen(true)}>
+              <span className="text-lg sm:text-xl">☰</span>
             </button>
           </div>
         </div>
@@ -539,12 +582,12 @@ export const DashboardPage = () => {
           </div>
         )}
 
-        {/* Main Grid - Balanced 2 Column Layout */}
-        <div className="grid grid-cols-2 gap-6">
+        {/* Main Grid - Responsive Layout */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
           {/* Left Section - 5 Cards */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Daily Motivation Card */}
-            <div className={`bg-gradient-to-br ${dailyMotivation.color} rounded-3xl p-6 text-white shadow-xl transform hover:scale-105 transition-all duration-300`}>
+            <div className={`bg-gradient-to-br ${dailyMotivation.color} rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white shadow-xl transform hover:scale-105 transition-all duration-300`}>
               <div className="flex items-start gap-4 mb-4">
                 <div className="text-5xl animate-bounce-subtle">{dailyMotivation.icon}</div>
                 <div className="flex-1">
@@ -1199,123 +1242,6 @@ export const DashboardPage = () => {
               )}
             </div>
 
-            {/* Measurement Trends Card */}
-            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl p-6 text-white shadow-xl">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-semibold">Measurements</h3>
-                  <p className="text-xs text-white opacity-75 mt-1">{measurementTrends?.overall_assessment || 'Tracking...'}</p>
-                </div>
-                <button 
-                  onClick={() => navigate('/profile')}
-                  className="p-2 bg-white bg-opacity-20 rounded-lg hover:bg-opacity-30 transition-all"
-                  title="Update measurements"
-                >
-                  <span className="text-xl">📏</span>
-                </button>
-              </div>
-
-              {measurementTrends?.has_data ? (
-                <>
-                  <div className="mb-4">
-                    <div className="text-5xl mb-2">
-                      {measurementTrends.overall_assessment === 'Excellent' ? '🎯' :
-                       measurementTrends.overall_assessment === 'Good Progress' ? '👍' : 
-                       measurementTrends.overall_assessment === 'On Track' ? '✅' : '⚙️'}
-                    </div>
-                  </div>
-
-                  <div className="bg-white bg-opacity-20 rounded-xl p-4 mb-4 backdrop-blur-sm">
-                    <div className="space-y-2 text-sm">
-                      {measurementTrends.measurements?.waist && (
-                        <div className="flex justify-between items-center">
-                          <span>📍 Waist:</span>
-                          <div className="text-right">
-                            <div className="font-bold">{measurementTrends.measurements.waist.initial} → {measurementTrends.measurements.waist.current} cm</div>
-                            <div className={`text-xs ${measurementTrends.measurements.waist.change < 0 ? 'text-yellow-200' : measurementTrends.measurements.waist.change > 0 ? 'text-orange-200' : 'text-green-200'}`}>
-                              {measurementTrends.measurements.waist.change > 0 ? '+' : ''}{measurementTrends.measurements.waist.change} cm
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      {measurementTrends.measurements?.chest && (
-                        <div className="flex justify-between items-center">
-                          <span>💪 Chest:</span>
-                          <div className="text-right">
-                            <div className="font-bold">{measurementTrends.measurements.chest.initial} → {measurementTrends.measurements.chest.current} cm</div>
-                            <div className={`text-xs ${measurementTrends.measurements.chest.change > 0 ? 'text-green-200' : measurementTrends.measurements.chest.change < 0 ? 'text-orange-200' : 'text-gray-200'}`}>
-                              {measurementTrends.measurements.chest.change > 0 ? '+' : ''}{measurementTrends.measurements.chest.change} cm
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      {measurementTrends.measurements?.hips && (
-                        <div className="flex justify-between items-center">
-                          <span>⭕ Hips:</span>
-                          <div className="text-right">
-                            <div className="font-bold">{measurementTrends.measurements.hips.initial} → {measurementTrends.measurements.hips.current} cm</div>
-                            <div className={`text-xs ${measurementTrends.measurements.hips.change < 0 ? 'text-yellow-200' : measurementTrends.measurements.hips.change > 0 ? 'text-orange-200' : 'text-green-200'}`}>
-                              {measurementTrends.measurements.hips.change > 0 ? '+' : ''}{measurementTrends.measurements.hips.change} cm
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      {measurementTrends.measurements?.arms && (
-                        <div className="flex justify-between items-center">
-                          <span>💪 Arms:</span>
-                          <div className="text-right">
-                            <div className="font-bold">{measurementTrends.measurements.arms.initial} → {measurementTrends.measurements.arms.current} cm</div>
-                            <div className={`text-xs ${measurementTrends.measurements.arms.change > 0 ? 'text-green-200' : measurementTrends.measurements.arms.change < 0 ? 'text-orange-200' : 'text-gray-200'}`}>
-                              {measurementTrends.measurements.arms.change > 0 ? '+' : ''}{measurementTrends.measurements.arms.change} cm
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      {measurementTrends.measurements?.thighs && (
-                        <div className="flex justify-between items-center">
-                          <span>🦵 Thighs:</span>
-                          <div className="text-right">
-                            <div className="font-bold">{measurementTrends.measurements.thighs.initial} → {measurementTrends.measurements.thighs.current} cm</div>
-                            <div className={`text-xs ${measurementTrends.measurements.thighs.change > 0 ? 'text-green-200' : measurementTrends.measurements.thighs.change < 0 ? 'text-orange-200' : 'text-gray-200'}`}>
-                              {measurementTrends.measurements.thighs.change > 0 ? '+' : ''}{measurementTrends.measurements.thighs.change} cm
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="bg-white bg-opacity-10 rounded-lg p-2 text-center">
-                      <div className="opacity-75">Entries</div>
-                      <div className="font-bold mt-1">{measurementTrends.total_entries}</div>
-                    </div>
-                    <div className="bg-white bg-opacity-10 rounded-lg p-2 text-center">
-                      <div className="opacity-75">Days Tracked</div>
-                      <div className="font-bold mt-1">{measurementTrends.days_tracked || 0}d</div>
-                    </div>
-                  </div>
-
-                  {measurementTrends.recommendations?.length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-white border-opacity-30 text-xs opacity-90">
-                      <p className="text-center italic">💡 {measurementTrends.recommendations[0]}</p>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="text-center py-6">
-                  <div className="text-4xl mb-2">📏</div>
-                  <p className="text-sm opacity-90">{measurementTrends?.message || 'Add measurements to track trends'}</p>
-                  <button
-                    onClick={() => navigate('/profile')}
-                    className="mt-3 px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg text-xs font-semibold transition-all"
-                  >
-                    Update Measurements
-                  </button>
-                </div>
-              )}
-            </div>
-
             {/* AI Coach Insights - REAL DATA FROM DROPOFF RISK */}
             <div className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-3xl p-6 text-white shadow-xl">
               <div className="flex items-start justify-between mb-4">
@@ -1401,7 +1327,7 @@ export const DashboardPage = () => {
               </button>
             </div>
 
-            {/* Measurement Reminder Countdown - STANDALONE CARD */}
+            {/* Measurement Reminder Countdown - IN LEFT COLUMN */}
             {measurementReminder && (
               <div className={`rounded-3xl p-6 shadow-xl ${
                 measurementReminder.reminder_due 
@@ -1409,7 +1335,7 @@ export const DashboardPage = () => {
                   : 'bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-300'
               }`}>
                 <div className="flex items-center justify-between">
-                  <div>
+                  <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-3xl">{measurementReminder.reminder_due ? '⏰' : '📏'}</span>
                       <h3 className="text-xl font-bold text-gray-900">
@@ -1433,7 +1359,7 @@ export const DashboardPage = () => {
                       </p>
                     )}
                   </div>
-                  <div className="text-center">
+                  <div className="text-center ml-4">
                     <div className={`text-6xl font-bold mb-2 ${
                       measurementReminder.reminder_due ? 'text-red-600 animate-pulse' : 'text-blue-600'
                     }`}>
@@ -1456,201 +1382,207 @@ export const DashboardPage = () => {
                 )}
               </div>
             )}
+          </div>
 
-            {/* Body Measurements Card */}
-            {(latestMeasurements || profile?.initial_measurements) && (
-              <div className="bg-white rounded-3xl p-6 shadow-xl">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                    <span className="text-2xl">📏</span>
-                    Body Measurements
-                  </h3>
-                  <button
-                    onClick={() => setShowMeasurementModal(true)}
-                    className="text-xs text-violet-600 hover:text-violet-700 font-semibold flex items-center gap-1"
-                  >
-                    Update
-                    <span>→</span>
-                  </button>
-                </div>
-                
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-xs text-gray-500">
-                    Last updated: {latestMeasurements?.date 
-                      ? new Date(latestMeasurements.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                      : profile?.initial_measurements?.measured_at 
-                        ? new Date(profile.initial_measurements.measured_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                        : 'Never'
-                    }
+          {/* Right Column - Stats and Insights */}
+          <div className="space-y-6">
+            {/* Body Measurements and This Week - Side by Side Grid with Proper Spacing */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-10">
+              {/* Body Measurements Card */}
+              {(latestMeasurements || profile?.initial_measurements) && (
+                <div className="bg-white rounded-3xl p-6 shadow-xl mb-6 lg:mb-0">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                      <span className="text-2xl">📏</span>
+                      Body Measurements
+                    </h3>
+                    <button
+                      onClick={() => setShowMeasurementModal(true)}
+                      className="text-xs text-violet-600 hover:text-violet-700 font-semibold flex items-center gap-1"
+                    >
+                      Update
+                      <span>→</span>
+                    </button>
                   </div>
                   
-                  {/* Countdown Timer */}
-                  {measurementReminder && (
-                    <div className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                      measurementReminder.reminder_due 
-                        ? 'bg-red-100 text-red-700 animate-pulse' 
-                        : 'bg-blue-100 text-blue-700'
-                    }`}>
-                      {measurementReminder.reminder_due 
-                        ? '⏰ Update Due!' 
-                        : `⏳ ${measurementReminder.days_until_next} days until next update`
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="text-xs text-gray-500">
+                      Last updated: {latestMeasurements?.date 
+                        ? new Date(latestMeasurements.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                        : profile?.initial_measurements?.measured_at 
+                          ? new Date(profile.initial_measurements.measured_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                          : 'Never'
                       }
+                    </div>
+                    
+                    {/* Countdown Timer */}
+                    {measurementReminder && (
+                      <div className={`text-xs font-semibold px-3 py-1 rounded-full ${
+                        measurementReminder.reminder_due 
+                          ? 'bg-red-100 text-red-700 animate-pulse' 
+                          : 'bg-blue-100 text-blue-700'
+                      }`}>
+                        {measurementReminder.reminder_due 
+                          ? '⏰ Update Due!' 
+                          : `⏳ ${measurementReminder.days_until_next} days until next update`
+                        }
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Prominent Update Button when due */}
+                  {measurementReminder && measurementReminder.reminder_due && (
+                    <div className="mb-4">
+                      <button
+                        onClick={() => setShowMeasurementModal(true)}
+                        className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-violet-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                      >
+                        <span className="text-xl">📏</span>
+                        Update Measurements Now
+                        <span className="text-xl">→</span>
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Use latestMeasurements if available, otherwise use initial_measurements */}
+                    {(() => {
+                      const measurements = latestMeasurements?.measurements || profile?.initial_measurements || {};
+                      return (
+                        <>
+                          {measurements.waist_cm && (
+                            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-3">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-lg">⭕</span>
+                                <span className="text-xs text-gray-600 font-semibold">Waist</span>
+                              </div>
+                              <div className="text-2xl font-bold text-blue-700">{measurements.waist_cm}</div>
+                              <div className="text-xs text-gray-500">cm</div>
+                            </div>
+                          )}
+                          
+                          {measurements.chest_cm && (
+                            <div className="bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-200 rounded-xl p-3">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-lg">💪</span>
+                                <span className="text-xs text-gray-600 font-semibold">Chest</span>
+                              </div>
+                              <div className="text-2xl font-bold text-purple-700">{measurements.chest_cm}</div>
+                              <div className="text-xs text-gray-500">cm</div>
+                            </div>
+                          )}
+                          
+                          {measurements.hips_cm && (
+                            <div className="bg-gradient-to-br from-pink-50 to-rose-50 border border-pink-200 rounded-xl p-3">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-lg">🔄</span>
+                                <span className="text-xs text-gray-600 font-semibold">Hips</span>
+                              </div>
+                              <div className="text-2xl font-bold text-pink-700">{measurements.hips_cm}</div>
+                              <div className="text-xs text-gray-500">cm</div>
+                            </div>
+                          )}
+                          
+                          {measurements.left_arm_cm && (
+                            <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-200 rounded-xl p-3">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-lg">💪</span>
+                                <span className="text-xs text-gray-600 font-semibold">Left Arm</span>
+                              </div>
+                              <div className="text-2xl font-bold text-teal-700">{measurements.left_arm_cm}</div>
+                              <div className="text-xs text-gray-500">cm</div>
+                            </div>
+                          )}
+                          
+                          {measurements.right_arm_cm && (
+                            <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-200 rounded-xl p-3">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-lg">💪</span>
+                                <span className="text-xs text-gray-600 font-semibold">Right Arm</span>
+                              </div>
+                              <div className="text-2xl font-bold text-teal-700">{measurements.right_arm_cm}</div>
+                              <div className="text-xs text-gray-500">cm</div>
+                            </div>
+                          )}
+                          
+                          {measurements.left_thigh_cm && (
+                            <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-3">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-lg">🦵</span>
+                                <span className="text-xs text-gray-600 font-semibold">Left Thigh</span>
+                              </div>
+                              <div className="text-2xl font-bold text-amber-700">{measurements.left_thigh_cm}</div>
+                              <div className="text-xs text-gray-500">cm</div>
+                            </div>
+                          )}
+                          
+                          {measurements.right_thigh_cm && (
+                            <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-3">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-lg">🦵</span>
+                                <span className="text-xs text-gray-600 font-semibold">Right Thigh</span>
+                              </div>
+                              <div className="text-2xl font-bold text-amber-700">{measurements.right_thigh_cm}</div>
+                              <div className="text-xs text-gray-500">cm</div>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </div>
+
+                  {latestMeasurements?.notes && (
+                    <div className="mt-4 p-3 bg-gray-50 rounded-xl">
+                      <div className="text-xs text-gray-600 font-semibold mb-1">Notes</div>
+                      <div className="text-sm text-gray-700">{latestMeasurements.notes}</div>
                     </div>
                   )}
                 </div>
+              )}
+
+              {/* Quick Stats - This Week */}
+              <div className="bg-white rounded-3xl p-6 shadow-xl mb-6 lg:mb-0">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">This Week</h3>
                 
-                {/* Prominent Update Button when due */}
-                {measurementReminder && measurementReminder.reminder_due && (
-                  <div className="mb-4">
-                    <button
-                      onClick={() => setShowMeasurementModal(true)}
-                      className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:from-violet-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-                    >
-                      <span className="text-xl">📏</span>
-                      Update Measurements Now
-                      <span className="text-xl">→</span>
-                    </button>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center">
+                        <span className="text-xl">🎯</span>
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-600">Habit Score</div>
+                        <div className="text-lg font-bold text-gray-900">{habitScore?.habit_score || 0}/100</div>
+                      </div>
+                    </div>
+                    <div className="text-green-600 text-sm font-semibold">+5%</div>
                   </div>
-                )}
 
-                <div className="grid grid-cols-2 gap-3">
-                  {/* Use latestMeasurements if available, otherwise use initial_measurements */}
-                  {(() => {
-                    const measurements = latestMeasurements?.measurements || profile?.initial_measurements || {};
-                    return (
-                      <>
-                        {measurements.waist_cm && (
-                          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-lg">⭕</span>
-                              <span className="text-xs text-gray-600 font-semibold">Waist</span>
-                            </div>
-                            <div className="text-2xl font-bold text-blue-700">{measurements.waist_cm}</div>
-                            <div className="text-xs text-gray-500">cm</div>
-                          </div>
-                        )}
-                        
-                        {measurements.chest_cm && (
-                          <div className="bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-200 rounded-xl p-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-lg">💪</span>
-                              <span className="text-xs text-gray-600 font-semibold">Chest</span>
-                            </div>
-                            <div className="text-2xl font-bold text-purple-700">{measurements.chest_cm}</div>
-                            <div className="text-xs text-gray-500">cm</div>
-                          </div>
-                        )}
-                        
-                        {measurements.hips_cm && (
-                          <div className="bg-gradient-to-br from-pink-50 to-rose-50 border border-pink-200 rounded-xl p-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-lg">🔄</span>
-                              <span className="text-xs text-gray-600 font-semibold">Hips</span>
-                            </div>
-                            <div className="text-2xl font-bold text-pink-700">{measurements.hips_cm}</div>
-                            <div className="text-xs text-gray-500">cm</div>
-                          </div>
-                        )}
-                        
-                        {measurements.left_arm_cm && (
-                          <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-200 rounded-xl p-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-lg">💪</span>
-                              <span className="text-xs text-gray-600 font-semibold">Left Arm</span>
-                            </div>
-                            <div className="text-2xl font-bold text-teal-700">{measurements.left_arm_cm}</div>
-                            <div className="text-xs text-gray-500">cm</div>
-                          </div>
-                        )}
-                        
-                        {measurements.right_arm_cm && (
-                          <div className="bg-gradient-to-br from-teal-50 to-cyan-50 border border-teal-200 rounded-xl p-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-lg">💪</span>
-                              <span className="text-xs text-gray-600 font-semibold">Right Arm</span>
-                            </div>
-                            <div className="text-2xl font-bold text-teal-700">{measurements.right_arm_cm}</div>
-                            <div className="text-xs text-gray-500">cm</div>
-                          </div>
-                        )}
-                        
-                        {measurements.left_thigh_cm && (
-                          <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-lg">🦵</span>
-                              <span className="text-xs text-gray-600 font-semibold">Left Thigh</span>
-                            </div>
-                            <div className="text-2xl font-bold text-amber-700">{measurements.left_thigh_cm}</div>
-                            <div className="text-xs text-gray-500">cm</div>
-                          </div>
-                        )}
-                        
-                        {measurements.right_thigh_cm && (
-                          <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-3">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-lg">🦵</span>
-                              <span className="text-xs text-gray-600 font-semibold">Right Thigh</span>
-                            </div>
-                            <div className="text-2xl font-bold text-amber-700">{measurements.right_thigh_cm}</div>
-                            <div className="text-xs text-gray-500">cm</div>
-                          </div>
-                        )}
-                      </>
-                    );
-                  })()}
-                </div>
-
-                {latestMeasurements?.notes && (
-                  <div className="mt-4 p-3 bg-gray-50 rounded-xl">
-                    <div className="text-xs text-gray-600 font-semibold mb-1">Notes</div>
-                    <div className="text-sm text-gray-700">{latestMeasurements.notes}</div>
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <span className="text-xl">💪</span>
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-600">Workouts</div>
+                        <div className="text-lg font-bold text-gray-900">{weeklyWorkouts}/7</div>
+                      </div>
+                    </div>
+                    <div className="text-green-600 text-sm font-semibold">On track</div>
                   </div>
-                )}
-              </div>
-            )}
 
-            {/* Quick Stats */}
-            <div className="bg-white rounded-3xl p-6 shadow-xl">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">This Week</h3>
-              
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center">
-                      <span className="text-xl">🎯</span>
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+                        <span className="text-xl">🔥</span>
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-600">Streak</div>
+                        <div className="text-lg font-bold text-gray-900">{habitScore?.streak_count || 0} weeks</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-sm text-gray-600">Habit Score</div>
-                      <div className="text-lg font-bold text-gray-900">{habitScore?.habit_score || 0}/100</div>
-                    </div>
+                    <div className="text-green-600 text-sm font-semibold">Amazing!</div>
                   </div>
-                  <div className="text-green-600 text-sm font-semibold">+5%</div>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                      <span className="text-xl">💪</span>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-600">Workouts</div>
-                      <div className="text-lg font-bold text-gray-900">{weeklyWorkouts}/7</div>
-                    </div>
-                  </div>
-                  <div className="text-green-600 text-sm font-semibold">On track</div>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
-                      <span className="text-xl">🔥</span>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-600">Streak</div>
-                      <div className="text-lg font-bold text-gray-900">{habitScore?.streak_count || 0} weeks</div>
-                    </div>
-                  </div>
-                  <div className="text-green-600 text-sm font-semibold">Amazing!</div>
                 </div>
               </div>
             </div>

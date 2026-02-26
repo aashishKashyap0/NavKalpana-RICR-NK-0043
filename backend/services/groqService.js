@@ -468,6 +468,56 @@ export const generateAICoachingResponse = async (user_id, question) => {
     };
   }
 
+  // Pre-filter: Check for obvious non-fitness keywords
+  const lowerQuestion = question.toLowerCase();
+  
+  // Keywords that indicate fitness/health topics (should be allowed)
+  const fitnessKeywords = [
+    'workout', 'exercise', 'diet', 'nutrition', 'weight', 'muscle', 'fat', 'calories', 
+    'protein', 'fitness', 'training', 'gym', 'health', 'body', 'strength', 'cardio', 
+    'recovery', 'sleep', 'energy', 'fatigue', 'goal', 'progress', 'plan', 'biceps',
+    'triceps', 'chest', 'back', 'legs', 'shoulders', 'abs', 'core', 'squat', 'deadlift',
+    'bench press', 'injury', 'injuries', 'pain', 'sore', 'rest day', 'bulk', 'cut',
+    'lean', 'tone', 'gain', 'lose', 'build', 'grow', 'macros', 'carbs', 'fats',
+    'meal', 'eating', 'hungry', 'appetite', 'metabolism', 'burn', 'reps', 'sets',
+    'form', 'technique', 'stretch', 'warm up', 'cool down', 'hydration', 'water',
+    'supplement', 'vitamin', 'creatine', 'whey', 'running', 'jogging', 'walking',
+    'cycling', 'swimming', 'yoga', 'pilates', 'hiit', 'endurance', 'stamina'
+  ];
+  
+  // Keywords that clearly indicate NON-fitness topics (should be rejected)
+  const nonFitnessKeywords = [
+    'movie', 'film', 'actor', 'actress', 'celebrity', 'singer', 'song', 'music', 'concert',
+    'politics', 'president', 'election', 'government', 'minister', 'parliament', 'vote',
+    'coding', 'programming', 'javascript', 'python', 'html', 'css', 'software', 'app development',
+    'cricket score', 'football score', 'match result', 'ipl', 'world cup winner', 'tournament',
+    'capital of', 'population of', 'who invented', 'when was', 'history of',
+    'stock market', 'cryptocurrency', 'bitcoin', 'investment', 'trading',
+    'relationship advice', 'dating', 'marriage', 'breakup', 'love',
+    'weather', 'climate', 'temperature', 'rain', 'forecast',
+    'car', 'vehicle', 'driving', 'license', 'traffic',
+    'phone', 'mobile', 'laptop', 'computer', 'gadget',
+    'book', 'novel', 'author', 'story', 'poem'
+  ];
+  
+  // Check if question contains fitness keywords
+  const hasFitnessKeyword = fitnessKeywords.some(keyword => lowerQuestion.includes(keyword));
+  
+  // Check if question contains non-fitness keywords
+  const hasNonFitnessKeyword = nonFitnessKeywords.some(keyword => lowerQuestion.includes(keyword));
+  
+  // If question has fitness keywords, allow it (even if it has some non-fitness words)
+  if (hasFitnessKeyword) {
+    // This is likely a fitness question, proceed to AI
+  } else if (hasNonFitnessKeyword) {
+    // Has non-fitness keywords and NO fitness keywords, reject
+    return {
+      response: "Sorry, I can't help with that. I'm your FitAI fitness assistant and can only answer questions related to your health, workouts, diet, and progress.",
+      confidence: 'High'
+    };
+  }
+  // If neither fitness nor non-fitness keywords detected, let AI decide
+
   const contextPrompt = formatUserContextForAI(userContext);
   
   const prompt = `${contextPrompt}
@@ -475,9 +525,44 @@ export const generateAICoachingResponse = async (user_id, question) => {
 === USER QUESTION ===
 "${question}"
 
-=== TASK ===
-You are this user's personal AI fitness coach named "${userContext.user.name}". You have complete knowledge of their entire fitness journey including their personal information. Answer their question with highly personalized advice in a CLEAR, STRUCTURED, STEP-BY-STEP format.
+=== CRITICAL INSTRUCTION: TOPIC VALIDATION ===
+BEFORE answering, you MUST first determine if this question is related to fitness/health.
 
+STEP 1: CHECK IF QUESTION IS ABOUT:
+✅ ALLOWED TOPICS (answer normally):
+- Fitness, workouts, exercises, training
+- Diet, nutrition, meals, calories, macros
+- Weight loss, fat loss, muscle gain, body recomposition
+- Recovery, rest days, sleep, fatigue
+- Progress tracking, measurements, body composition
+- Health and wellness related to fitness
+- User's personal fitness data (name, age, weight, goal, email)
+- FitAI features, dashboard, plans
+
+❌ FORBIDDEN TOPICS (reject immediately):
+- Politics, government, elections, laws
+- Movies, TV shows, entertainment, celebrities
+- Sports scores, teams, matches (unless asking about fitness training)
+- Coding, programming, technology
+- General knowledge, trivia, facts unrelated to fitness
+- Personal advice about relationships, career, finance
+- Current events, news, world affairs
+- Science, history, geography (unless directly fitness-related)
+- Any topic not directly related to fitness/health
+
+STEP 2: IF QUESTION IS FORBIDDEN:
+Return this EXACT JSON structure:
+{
+  "response": "Sorry, I can't help with that. I'm your FitAI fitness assistant and can only answer questions related to your health, workouts, diet, and progress.",
+  "confidence": "High"
+}
+
+DO NOT add steps, tips, or any other fields. DO NOT try to relate it to fitness. Just return the rejection message.
+
+STEP 3: IF QUESTION IS ALLOWED:
+Proceed with personalized fitness advice using the format below.
+
+=== RESPONSE FORMAT FOR FITNESS QUESTIONS ===
 IMPORTANT INSTRUCTIONS:
 - If they ask about their NAME, tell them: "Your name is ${userContext.user.name}"
 - If they ask about their EMAIL, tell them: "Your email is ${userContext.user.email}"
@@ -546,7 +631,7 @@ FORMATTING RULES:
       messages: [
         {
           role: "system",
-          content: "You are a personal fitness coach. Always respond with valid JSON only, no markdown."
+          content: "You are a FITNESS-ONLY assistant. Your FIRST task is to determine if the question is fitness-related. If the question is about politics, movies, celebrities, sports scores, coding, general knowledge, or anything NOT related to fitness/health, you MUST respond with ONLY this JSON: {\"response\": \"Sorry, I can't help with that. I'm your FitAI fitness assistant and can only answer questions related to your health, workouts, diet, and progress.\", \"confidence\": \"High\"}. Do NOT try to answer non-fitness questions. Do NOT try to relate them to fitness. Just reject them immediately. Always return valid JSON only, no markdown."
         },
         {
           role: "user",
